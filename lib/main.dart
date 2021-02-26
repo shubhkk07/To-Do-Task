@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       theme: ThemeData(
+        scaffoldBackgroundColor: Color(0xffFFF9EC),
         fontFamily: 'Sen'
       ),
       home: LoginPage(),
@@ -30,4 +32,6 @@ class MyApp extends StatelessWidget {
   }
 }
 //TODO:first authentication method should be properly handled
-//TODO:id of each note should be handled and it should be unique so that we can delete a note
+//TODO:handle back button properly
+
+

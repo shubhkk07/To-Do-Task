@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,14 +13,13 @@ class AuthService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final usersref = FirebaseFirestore.instance.collection('Users');
 
-
-   userAlreadyexists(){
-    final GoogleSignInAccount user = googleSignIn.currentUser;
+  userAlreadyexists() {
+    final GoogleSignInAccount user =
+        googleSignIn.currentUser; //ye abhi handel krna hai
     return user.id;
-     
   }
 
-   getUser(){
+  getUser() {
     var currUser = auth.currentUser;
     return currUser.uid;
   }
@@ -41,29 +38,23 @@ class AuthService {
     final GoogleSignInAccount user = googleSignIn.currentUser;
     DocumentSnapshot doc = await usersref.doc(user.id).get();
 
-    if (doc.exists == false) {
-      await usersref.doc(user.id).collection('notes').doc().set(note.toMap());
-    } else {
-      await usersref.doc(user.id).collection('notes').add(note.toMap());
-    }
+    await usersref
+        .doc(user.id)
+        .collection('notes')
+        .doc(note.id)
+        .set(note.toMap());
+  }
+
+  Future deletePost(String docId) async {
+    final GoogleSignInAccount user = googleSignIn.currentUser;
+    await usersref.doc(user.id).collection('notes').doc(docId).delete();
   }
 
   Future retrievePost() async {
-    
     final GoogleSignInAccount user = googleSignIn.currentUser;
     QuerySnapshot querySnapshot =
         await usersref.doc(user.id).collection('notes').get();
     return querySnapshot.docs;
-
-   }
-
-  Stream<List<Note>> getNotes() {
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    return usersref
-        .doc(user.id)
-        .collection('notes')
-        .snapshots()
-        .map((list) => list.docs.map((doc) => Note.fromMap(doc.data())).toList());
   }
 
   void signout() async {

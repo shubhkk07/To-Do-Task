@@ -5,7 +5,7 @@ class Note {
   final String description;
   final DateTime date;
   final String time;
-  final int id;
+  final String id;
 
   Note({this.title, this.description, this.date, this.time, this.id});
 
