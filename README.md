@@ -1,6 +1,6 @@
 # NoteKeeper App
 
-This is an android application which behaves like your personal diary and keeps the track of you daily tasks.
+This is an android application which behaves like your personal diary and keeps track of your daily tasks.
 It is made using flutter and firebase for backend. This app authenticates the user and made him to add the tasks he/she want to perform in the following
 day. Then, it maps the events with date and show user and made user's day productive.
 
