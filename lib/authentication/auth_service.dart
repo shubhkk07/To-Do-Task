@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:newproject/models/notes.dart';
+import 'package:newproject/models/user.dart';
 
 class AuthService {
   Note note;
@@ -14,14 +14,15 @@ class AuthService {
   final usersref = FirebaseFirestore.instance.collection('Users');
 
   userAlreadyexists() {
-    final GoogleSignInAccount user =
-        googleSignIn.currentUser; //ye abhi handel krna hai
-    return user.id;
+    
+   return googleSignIn.currentUser; //ye abhi handel krna hai
+    
   }
 
-  getUser() {
-    var currUser = auth.currentUser;
-    return currUser.uid;
+  Future<UserModel> getUserId() async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final GoogleSignInAccount user = googleSignIn.currentUser;
+    return UserModel(id: user.id,uid: auth.currentUser.uid);
   }
 
   Future signInwithGoogle() async {

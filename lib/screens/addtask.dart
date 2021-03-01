@@ -4,11 +4,8 @@ import 'package:newproject/models/notes.dart';
 import 'package:newproject/services/locator.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
-import 'homepage.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -20,12 +17,10 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController _description;
   TextEditingController _timeController;
 
- 
   String lsHour = TimeOfDay.now().hour.toString().padLeft(2, '0');
   String lsMinute = TimeOfDay.now().minute.toString().padLeft(2, '0');
 
   GlobalKey<FormState> _key = GlobalKey<FormState>();
-
 
   @override
   void initState() {
@@ -35,24 +30,23 @@ class _AddTaskState extends State<AddTask> {
     _timeController = TextEditingController(text: '$lsHour:$lsMinute');
   }
 
-
   String id = Uuid().v4();
 
-
-
   String tittle, description;
-  String time = DateTime.now().hour.toString() + ':' + DateTime.now().minute.toString();
+  String time =
+      DateTime.now().hour.toString() + ':' + DateTime.now().minute.toString();
 
   DateTime date = DateTime.now();
 
-  String titleValidation(String title){
-    if(tittle == null){
+  String titleValidation(String title) {
+    if (tittle == null) {
       return "Title can't be empty";
     }
   }
+
   Future<bool> _onBackPressedWithButton() async {
-    Navigator.of(context).pop(false);
-    return false;
+    Navigator.pop(context);
+    return true;
   }
 
   @override
@@ -99,8 +93,8 @@ class _AddTaskState extends State<AddTask> {
                                 labelStyle: TextStyle(fontSize: 22)),
                             controller: _tittle,
                             validator: titleValidation,
-                            onChanged: (val){
-                              tittle=val;
+                            onChanged: (val) {
+                              tittle = val;
                             },
                             onSaved: (val) {
                               tittle = val;
@@ -119,7 +113,6 @@ class _AddTaskState extends State<AddTask> {
                               labelStyle: TextStyle(fontSize: 22)),
                           initialValue: DateTime.now(),
                           format: _formatDate,
-                          
                           onShowPicker: (context, currentValue) {
                             return showDatePicker(
                               context: context,
@@ -177,25 +170,22 @@ class _AddTaskState extends State<AddTask> {
                         child: RaisedButton(
                           color: Color(0xFF309397),
                           onPressed: () async {
-                            if(_key.currentState.validate()){
+                            if (_key.currentState.validate()) {
                               _key.currentState.save();
-                            final note = Note(
-                                title: this.tittle,
-                                description: this.description,
-                                date: this.date,
-                                time: this.time,
-                                id: this.id);
-                            await getIt.get<AuthService>().addPost(note);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()));
-                          }
-                          
+                              final note = Note(
+                                  title: this.tittle,
+                                  description: this.description,
+                                  date: this.date,
+                                  time: this.time,
+                                  id: this.id);
+                              await getIt.get<AuthService>().addPost(note);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context,'/home',(Route<dynamic> route) => false);
+                            }
                           },
                           child: Text(
                             'Add task',
-                            style: TextStyle(fontSize: 30,color: Colors.white),
+                            style: TextStyle(fontSize: 30, color: Colors.white),
                           ),
                         ),
                       ),
