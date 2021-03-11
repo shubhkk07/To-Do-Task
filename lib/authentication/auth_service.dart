@@ -13,16 +13,9 @@ class AuthService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final usersref = FirebaseFirestore.instance.collection('Users');
 
-  userAlreadyexists() {
-    
-   return googleSignIn.currentUser; //ye abhi handel krna hai
-    
-  }
-
-  Future<UserModel> getUserId() async{
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    return UserModel(id: user.id,uid: auth.currentUser.uid);
+  Future<UserModel> getUserId() async {
+    var currUser = auth.currentUser;
+    return UserModel(uid: currUser.uid);
   }
 
   Future signInwithGoogle() async {
@@ -36,25 +29,27 @@ class AuthService {
   }
 
   Future addPost(Note note) async {
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    DocumentSnapshot doc = await usersref.doc(user.id).get();
+    DocumentSnapshot doc = await usersref.doc(auth.currentUser.uid).get();
 
     await usersref
-        .doc(user.id)
+        .doc(auth.currentUser.uid)
         .collection('notes')
         .doc(note.id)
         .set(note.toMap());
   }
 
   Future deletePost(String docId) async {
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    await usersref.doc(user.id).collection('notes').doc(docId).delete();
+    await usersref
+        .doc(auth.currentUser.uid)
+        .collection('notes')
+        .doc(docId)
+        .delete();
   }
 
   Future retrievePost() async {
-    final GoogleSignInAccount user = googleSignIn.currentUser;
+    // final GoogleSignInAccount user = googleSignIn.currentUser;
     QuerySnapshot querySnapshot =
-        await usersref.doc(user.id).collection('notes').get();
+        await usersref.doc(auth.currentUser.uid).collection('notes').get();
     return querySnapshot.docs;
   }
 
